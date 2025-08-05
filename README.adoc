@@ -1,0 +1,6 @@
+= build-doc
+:doctype: article
+
+== build-doc
+This is a project to convert specifications and manuals written in asciidoc format into docbook, word, odt, html, and pdf.
+

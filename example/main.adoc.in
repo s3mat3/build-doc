@@ -1,0 +1,245 @@
+ifdef::backend-html5[]
+= @DOC_CHUNK_TITLE@
+endif::[]
+ifdef::backend-docbook5[]
+= @DOC_CHUNK_TITLE@: @DOC_CHUNK_SUB_TITLE@
+endif::[]
+ifdef::backend-pdf[]
+= @DOC_CHUNK_TITLE@: @DOC_CHUNK_SUB_TITLE@
+endif::[]
+// 空行が入ると挙動がおかしくなるのでコメント行で適当に…
+// @@で囲まれたDOC_CHUNK_XXXはCMakeLists.txtの変数からセットされるよ!!
+// japanese document only
+:lang: ja
+// documet type {book or article}
+:doctype: @DOC_CHUNK_TYPE@
+// description of this document
+:description: @DOC_CHUNK_DESCRIPTION@
+// The name of this document in the document header
+:docname: @DOC_CHUNK_NAME@
+// directory for images of this document(relative)
+// for Figure (image)
+:imagesdir: @DOC_CHUNK_IMAGE_DIR@
+// image embeded
+:data-uri:
+// use icon font
+:icons: font
+// :iconsdir: @DOC_CHUNK_IMAGE_DIR@/icons
+// ----------------
+// for HTML backend
+:stylesdir: @BUILD_DOC_THEME_HTML_DIR@
+:stylesheet: @DOC_CHUNK_HTML_THEME_NAME@
+// ---------------
+// for PDF backend
+:pdf-fontsdir: @DOC_CHUNK_PDF_FONTS_DIR@;GEM_FONTS_DIR
+:pdf-themesdir: @BUILD_DOC_THEME_PDF_DIR@
+:pdf-theme: @DOC_CHUNK_PDF_THEME_NAME@
+// for PDF title page
+:title-logo-image: @DOC_CHUNK_LOGO_DIR@/@DOC_CHUNK_LOGO_IMG_NAME@
+:title-page-background-image: @BUILD_DOC_TEMPLATE_TITLE_PAGE@/@DOC_CHUNK_TITLE_IMG_NAME@
+// ------------------
+// title and captions
+// :preface-title: はじめに
+// :appendix-caption: 付録
+// :example-caption: 例
+// :last-update-label: 最終更新
+// :listing-caption: リスト
+// :manname-title: 名前
+// :table-caption: 表
+// :figure-caption: 図
+:preface-title: Preface
+:appendix-caption: Appendix
+:example-caption: Example
+:last-update-label: Last-up-date
+:listing-caption: List
+:manname-title: Name
+:table-caption: Table
+:figure-caption: Figure
+// --------------
+// admon captions
+// :tip-caption: ヒント
+// :note-caption: 注記
+// :important-caption: 重要
+// :caution-caption: 注意
+// :warning-caption: 警告
+// :untitled-label: 無題
+:tip-caption: Tip
+:note-caption: Note
+:important-caption: Important
+:caution-caption: Caution
+:warning-caption: Warning
+:untitled-label: Untitled
+// -------
+// version
+:version-label: Version
+// この文書のバージョン
+:revnumber: @DOC_CHUNK_VERSION@
+// build-docリポジトリ自体にタグ付されたバージョンとバージョンハッシュ8桁 build-doc/CMakeLists.txt参照
+:vernumber: @BUILD_DOC_VERSION_REVISION@
+// ---
+// toc
+:toc: left
+:toclevels: @DOC_CHUNK_TOC_LEVELS@
+:toc-title: 目次
+// ---------------
+// chapter/sction
+:chapter-signifier:
+:sectnums:
+//:chapter-refsig:
+//:chapter-label:
+// ----
+// misc
+// ソースコード内キーワードの色付け他rogue等
+:source-highlighter: pygments
+// button:とかが使用出来る
+:experimental:
+// 数式
+:stem:
+// 表の偶数行に色付け 奇数行の場合oddを指定
+:table-stripes: even
+// local attributes
+// ::で囲むと本文中{}で参照出来る
+// たとえば
+// :my-common-dir: ../hoge/common
+// include::{my-common-dir}/fuga.adoc
+:doc-chunk-dir: @DOC_CHUNK_UML_DIR@
+:build-doc-theme-images-dir: @BUILD_DOC_THEME_IMAGES_DIR@
+
+// prifaceが必要であれば以下に記述
+// [preface]
+// abstractが必要であれば以下に記述
+// .Abstract
+// [abstract]
+
+// 一行空行を入れて
+// == Chapter 1
+// またはsections以下にファイルを作成しインクルード
+// include::section-xx.adoc[]
+// 
+ifdef::backend-html5[]
+[.cover-title]
+@DOC_CHUNK_TITLE@
+
+[.cover-sub-title]
+@DOC_CHUNK_SUB_TITLE@
+
+[.cover-author]
+@DOC_CHUNK_AUTHOR@
+
+[.cover-version]
+{version-label} {revnumber} : repos {vernumber}
+
+endif::[]
+
+ifdef::backend-docbook5,backend-pdf[]
+@DOC_CHUNK_AUTHOR@
+endif::[]
+
+[preface]
+
+ifdef::backend-html5[]
+image:{build-doc-theme-images-dir}/internal-use-only.svg[role="center"] [.span.red]#*内部文書*#
+endif::[]
+
+[WARNING]
+====
+本書はFUGAな仕様書であり、内部資料とする。
+====
+
+[CAUTION]
+====
+本書はFUGAな仕様書であり、内部資料とする。
+====
+
+[NOTE]
+====
+本書はFUGAな仕様書であり、内部資料とする。
+====
+
+[TIP]
+====
+本書はFUGAな仕様書であり、内部資料とする。
+====
+
+[IMPORTANT]
+====
+[.underline]#*_本書の内容は取扱注意とする。_*#
+====
+
+
+
+.改訂履歴
+****
+[cols="1,4,^1,^1",width="80%",align="center"]
+|===
+^| ver.   ^| 内容         ^| 日付      ^| 担当
+ | 1.1.0   | Add section   | 20yy-mm-d4 | hoge
+ | 1.0.1   | Typo          | 20yy-mm-d3 | kero
+ | 1.0.0   | Release       | 20yy-mm-d2 | fuga
+ | 1.0.0rc1| リリース候補1 | 20yy-mm-d1 | hoge
+|===
+****
+
+.Abstract
+[abstract]
+概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ概要の概要のほげはげふがけけけけ毛炉毛炉フガフガヘロヘロ
+
+== Chapter 1
+This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.This is a pen. The Hoge is the FUGA.
+
+個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。個々こけーここな鶏がエサ食った。個々コケーココな鶏がエサ食った。
+
+=== Section 1-1
+paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1paragrah1-1
+
+==== Sub section 1-1-1
+paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1paragrah1-1-1
+
+=== Section 1-2
+paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2paragrah1-2
+
+== Chapter 2
+paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2. paragrah2.
+
+* Kero
+** peko
+** geko
+	 . aaaa
+	 . bbbb
+	 . cccc
+* fuga
+* hoge
+
+=== Section 2-1
+pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1pragrah2-1
+
+.class test
+[plantuml, test-uml, svg]
+----
+class test {}
+----
+
+.class test2
+[plantuml, test2-uml, svg]
+----
+
+include::{doc-chunk-dir}/test2.class.uml[]
+
+----
+
+
+include::section3.adoc[]
+
+[appendix]
+include::appendix1.adoc[]
+
+[appendix]
+== qqqqq
+This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q. This is a Q.
+
+[glossary]
+== glossary
+abstract::
+    要約・抄録
+glossary::
+    用語集

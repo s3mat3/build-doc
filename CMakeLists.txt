@@ -1,0 +1,55 @@
+#[[
+@copyright © 2025 s3mat3
+This code is licensed under the MIT License, see the LICENSE file for details
+]]
+cmake_minimum_required (VERSION 3.24)
+
+file(STRINGS VERSION BUILD_DOC_VERSION_LINE)
+string(REGEX MATCH "([0-9]+\\.?)+" BUILD_DOC_VERSION ${BUILD_DOC_VERSION_LINE})
+set(TARGET build-doc)
+
+message("${TARGET} version is ${BUILD_DOC_VERSION}")
+
+project("${TARGET}"
+  VERSION ${BUILD_DOC_VERSION}
+  LANGUAGES NONE)
+
+
+#
+# SET VERSION NUMBER
+#
+execute_process (COMMAND date +%F OUTPUT_VARIABLE CMAKE_BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process (COMMAND git rev-parse --short HEAD OUTPUT_VARIABLE CMAKE_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process (COMMAND git rev-parse --abbrev-ref HEAD OUTPUT_VARIABLE CMAKE_DESTINATION OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+
+set(BUILD_DOC_BUILD_DATE ${CMAKE_BUILD_DATE})
+set(BUILD_DOC_REVISION ${CMAKE_REVISION})
+set(BUILD_DOC_VERSION_REVISION "${BUILD_DOC_VERSION} / ${BUILD_DOC_REVISION}")
+##
+# build-doc base directory
+set(BUILD_DOC_BASE ${PROJECT_SOURCE_DIR})
+##
+# build-doc build directory
+set(BUILD_DOC_BUILD_DIR ${PROJECT_BINARY_DIR})
+set(BUILD_DOC_OUTPUT_BASE ${BUILD_DOC_BUILD_DIR}/doc)
+##
+# document common directory
+set(BUILD_DOC_COMMON_DIR ${BUILD_DOC_BASE}/common)
+set(BUILD_DOC_IMAGES_DIR ${BUILD_DOC_COMMON_DIR}/images)
+##
+# script directory
+set(BUILD_DOC_SCRIPTS_DIR ${BUILD_DOC_BASE}/scripts)
+##
+# theme directory
+set(BUILD_DOC_THEME_DIR ${BUILD_DOC_BASE}/theme)
+set(BUILD_DOC_THEME_HTML_DIR ${BUILD_DOC_THEME_DIR}/html)
+set(BUILD_DOC_THEME_PDF_DIR ${BUILD_DOC_THEME_DIR}/pdf)
+set(BUILD_DOC_THEME_ODT_DIR ${BUILD_DOC_THEME_DIR}/odt)
+set(BUILD_DOC_THEME_WORD_DIR ${BUILD_DOC_THEME_DIR}/word)
+set(BUILD_DOC_THEME_IMAGES_DIR ${BUILD_DOC_THEME_DIR}/images)
+set(BUILD_DOC_TEMPLATE_TITLE_PAGE ${BUILD_DOC_THEME_DIR}/title-page)
+## use subdirectory under correct
+set(BUILD_DOC_EXAMPLE ${BUILD_DOC_BASE}/example)
+add_subdirectory(${BUILD_DOC_EXAMPLE})
+

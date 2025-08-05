@@ -1,0 +1,116 @@
+ifdef::backend-html5[]
+= @DOC_CHUNK_TITLE@
+endif::[]
+ifdef::backend-docbook5[]
+= @DOC_CHUNK_TITLE@: @DOC_CHUNK_SUB_TITLE@
+endif::[]
+ifdef::backend-pdf[]
+= @DOC_CHUNK_TITLE@: @DOC_CHUNK_SUB_TITLE@
+endif::[]
+// 空行が入ると挙動がおかしくなるのでコメント行で適当に…
+// @@で囲まれたDOC_CHUNK_XXXはCMakeLists.txtの変数からセットされるよ!!
+// japanese document only
+:lang: ja
+// documet type {book or article}
+:doctype: @DOC_CHUNK_TYPE@
+// description of this document
+:description: @DOC_CHUNK_DESCRIPTION@
+// The name of this document in the document header
+:docname: @DOC_CHUNK_NAME@
+// directory for images of this document(relative)
+// for Figure (image)
+:imagesdir: @DOC_CHUNK_IMAGE_DIR@
+// image embeded
+:data-uri:
+// use icon font
+:icons: font
+// :iconsdir: @DOC_CHUNK_IMAGE_DIR@/icons
+// ----------------
+// for HTML backend
+:stylesdir: @BUILD_DOC_THEME_HTML_DIR@
+:stylesheet: @DOC_CHUNK_HTML_THEME_NAME@
+// ---------------
+// for PDF backend
+:pdf-fontsdir: @DOC_CHUNK_PDF_FONTS_DIR@;GEM_FONTS_DIR
+:pdf-themesdir: @BUILD_DOC_THEME_PDF_DIR@
+:pdf-theme: @DOC_CHUNK_PDF_THEME_NAME@
+// for PDF title page
+:title-logo-image: @DOC_CHUNK_LOGO_DIR@/@DOC_CHUNK_LOGO_IMG_NAME@
+:title-page-background-image: @BUILD_DOC_TEMPLATE_TITLE_PAGE@/@DOC_CHUNK_TITLE_IMG_NAME@
+// ------------------
+// title and captions
+// :preface-title: はじめに
+// :appendix-caption: 付録
+// :example-caption: 例
+// :last-update-label: 最終更新
+// :listing-caption: リスト
+// :manname-title: 名前
+// :table-caption: 表
+// :figure-caption: 図
+:preface-title: Preface
+:appendix-caption: Appendix
+:example-caption: Example
+:last-update-label: Last-up-date
+:listing-caption: List
+:manname-title: Name
+:table-caption: Table
+:figure-caption: Figure
+// --------------
+// admon captions
+// :tip-caption: ヒント
+// :note-caption: 注記
+// :important-caption: 重要
+// :caution-caption: 注意
+// :warning-caption: 警告
+// :untitled-label: 無題
+:tip-caption: Tip
+:note-caption: Note
+:important-caption: Important
+:caution-caption: Caution
+:warning-caption: Warning
+:untitled-label: Untitled
+// -------
+// version
+:version-label: Version
+// この文書のバージョン
+:revnumber: @DOC_CHUNK_VERSION@
+// build-docリポジトリ自体にタグ付されたバージョンとバージョンハッシュ8桁 build-doc/CMakeLists.txt参照
+:vernumber: @BUILD_DOC_VERSION_REVISION@
+// ---
+// toc
+:toc: left
+:toclevels: @DOC_CHUNK_TOC_LEVELS@
+:toc-title: 目次
+// ---------------
+// chapter/sction
+:chapter-signifier:
+:sectnums:
+//:chapter-refsig:
+//:chapter-label:
+// ----
+// misc
+// ソースコード内キーワードの色付け他rogue等
+:source-highlighter: pygments
+// button:とかが使用出来る
+:experimental:
+// 数式
+:stem:
+// 表の偶数行に色付け 奇数行の場合oddを指定
+:table-stripes: even
+// local attributes
+// ::で囲むと本文中{}で参照出来る
+// たとえば
+// :my-common-dir: ../hoge/common
+// include::{my-common-dir}/fuga.adoc
+
+// prifaceが必要であれば以下に記述
+// [preface]
+// abstractが必要であれば以下に記述
+// .Abstract
+// [abstract]
+
+// 一行空行を入れて
+// == Chapter 1
+// またはsections以下にファイルを作成しインクルード
+// sections以下であればコンパイル時カレントディレクトリなのでそのままファイル名で良い
+// include::section-xx.adoc[]

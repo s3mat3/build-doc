@@ -1,0 +1,22 @@
+{
+    "plugins": [
+        "@ynitto/asciidoc"
+    ],
+    "filters": {},
+    "rules": {
+        "preset-ja-spacing": true,
+        "preset-ja-technical-writing": {
+            "max-kanji-continuous-len": {
+                "max": 6,
+                "allow": [
+                ]
+            },
+            "no-mix-dearu-desumasu": {
+                "preferInHeader": "",
+                "preferInBody": "である",
+                "preferInList": "である",
+                "strict": false
+            }
+       }
+    }
+}
