@@ -1,6 +1,243 @@
 = build-doc
-:doctype: article
 
-== build-doc
 This is a project to convert specifications and manuals written in asciidoc format into docbook, word, odt, html, and pdf.
 
+Ruby版のasciidoctorとpandocを利用しasciidoc形式で記述された、文書を各フォーマットへ変換する。word,odtへはdocbook形式にasciidoctorで変換してpandocでさらに変換する。
+
+[source,terminal]
+.依存するアプリとモジュール
+----
+some-dir $ sudo apt install pandoc                           <1>
+some-dir $ sudo gem install asciidoctor                      <2>
+some-dir $ sudo gem install asciidoctor-pdf prawn prawn-svg  <3>
+some-dir $ sudo gem install asciidoctor-diagram              <4>
+some-dir $ sudo gem install asciidoctor-diagram-plantuml     <5>
+some-dir $ sudo gem install asciidoctor-mathematical         <6>
+some-dir $ sudo pip3 install nwdiag                          <7>
+----
+<1> pandoc wordやodt変換したい場合必須
+<2> 必須
+<3> PDF変換したい場合必須
+<4> diagramを記述したい場合必須
+<5> plantumlでUMLを記述したい場合必須
+<6> 綺麗な数式表現したい場合必須
+<7> ネットワーク図を記述したい場合必須(パッケット図も書ける)
+
+== 利用方
+任意のディレクトリーでクローンしてbuild-docに移る。templateディレクトリー丸ごと任意の名前でコピーし直下のCMakeLists.txtとmain.adoc.inを編集して利用する。例えば、仕様書と取説の両方を作成する場合 `cp -a template spec` `cp -a template manual` を行いそれぞれコピーされたディレクトリー直下のCMakeList.txtのDOC_CHUNK_TITLEとDOC_CHUNK_SUB_TITLEを変更する。大きな文書に育ったら適宜分割してsectionsディレクトリーで管理する。同じbuild-doc配下で管理すると文書間の内容の共有がしやすくなると思う。
+
+[source, terminal]
+.ディレクトリー構造
+----
+some-dir $
+some-dir $ git clone https://github.com/s3mat3/build-doc.git
+some-dir $ cd build-doc
+build-doc$ tree -an -L 3 -I .git --gitignore
+.
+├── .gitignore
+├── .textlintrc.json           <1>
+├── CHANGES
+├── CMakeLists.txt
+├── LICENSE
+├── README.adoc
+├── VERSION
+├── common                     <2>
+│   └── images
+│        └── .gitkeep
+├── example                    <3>
+│   ├── CMakeLists.txt
+│   ├── images
+│   │   └── .gitkeep
+│   ├── main.adoc.in
+│   ├── sections
+│   │   ├── .gitkeep
+│   │   ├── appendix1.adoc
+│   │   └── section3.adoc
+│   └── uml
+│        └── test2.class.uml
+├── package-lock.json
+├── package.json               <4>
+├── scripts
+│   └── config.rb              <5>
+├── template                   <6>
+│   ├── CMakeLists.txt
+│   ├── main.adoc.in
+│   └── sections
+│        └── .gitkeep
+└── theme                      <7>
+    ├── html
+    │   └── base-style-theme.css
+    ├── images
+    │   ├── confidetial.svg
+    │   ├── internal-use-only.svg
+    │   ├── public.svg
+    │   ├── sample-company-name.svg
+    │   └── sample-logo.svg
+    ├── odt
+    │   └── reference.odt
+    ├── pdf
+    │   ├── default-theme.yml
+    │   ├── internal-theme.yml
+    │   └── public-theme.yml
+    ├── title-page
+    │   └── sample-cover.svg
+    └── word
+        └── reference.docx
+----
+<1> textlintの設定
+<2> 共通のリソース
+<3> 例文書
+<4> textlint用
+<5> asciidoctor-pdfのSVGフォーマット日本語対応
+<6> このディレクトリーを適宜コピー、内容を記述
+<7> 変換時のスタイル/テーマ類
+
+clone初期の状態ではexampleディレクトリーにサンプルの文書があるので `cmake -S . -B build` を行なった後、 `cmake --build build` すると `./build/doc/example/` ディレクトリにword,odt,html,pdfに変換された文書が出力される。
+
+[source,terminal]
+.exampleの生成
+----
+build-doc $ cmake -S . -B build
+build-doc $ cmake --build build -- example-all
+build-doc $ ls build/doc/example/
+example.docx  example.html  example.odt  example.pdf  example.xml
+build-doc $
+----
+
+
+=== CMakeFiles.txtの変数
+文書変換に関わる変数をCMakeFIles.txt中で定義している。この変数を設定する事で多様な文書に対応したいな。この変数はbuild時、main.adoc.in中のattribute(s)へ反映されsectionsディレクトリーにmain.adocとして保存される。main.adocはbuild時常に変更されるので、.gitignoreでgit管理対象外としている。
+
+==== build-doc直下
+ほぼ変更することは無いハズ、ここでは主に各ディレクトリを変数にセットしている。add_subdirectoryでbuildする各文書ディレクトリを指名する。
+
+[options="header"]
+.変換に係る主な変数
+|===
+^|変数                    ^|意味
+ |BUILD_DOC_VERSION        | build-docリポジトリーのバージョン
+ |BUILD_DOC_THEME_HTML_DIR | html変換時使用するcssのディレクトリー
+ |BUILD_DOC_THEME_PDF_DIR  | pdf変換時使用するテーマのディレクトリー
+ |BUILD_DOC_THEME_WORD_DIR | pandocでword変換時使用するスタイルのディレクトリー
+ |BUILD_DOC_THEME_ODT_DIR  | pandocでodt変換時使用するスタイルのディレクトリー
+|===
+
+[source,cmake]
+.例えばexampleをbuildする場合
+----
+## use subdirectory under correct
+set(BUILD_DOC_EXAMPLE ${BUILD_DOC_BASE}/example)
+add_subdirectory(${BUILD_DOC_EXAMPLE})
+----
+
+==== 各文書ディレクトリー直下
+[options="header"]
+.文書変換に関わる変数
+|===
+^|変数                    ^|デフォルト               ^|意味
+ |DOC_CHUNK_TARGET         | template                 | ターゲットベース
+ |DOC_CHUNK_VERSION        | 0.0.0                    | 文書のバージョン
+ |DOC_CHUNK_NAME_BASE      | TEMP                     | 文書名
+ |DOC_CHUNK_NAME           | TEMP-VERSION             | 文書名+バージョン
+ |DOC_CHUNK_TITLE          | TEMP開発                 | 文書タイトル
+ |DOC_CHUNK_SUB_TITLE      | 仕様書                   | 文書サブタイトル
+ |DOC_CHUNK_AUTHOR         | 私の名前は著作者         | 著者
+ |DOC_CHUNK_TYPE           | book                     | 文書タイプ book \| article
+ |DOC_CHUNK_PDF_THEME_NAME | internal-theme.yaml      | PDF変換時使用するテーマファイル名
+ |DOC_CHUNK_HTML_THEME_NAME| internal-style-theme.css | HTML変換時使用するCSSファイル名
+ |DOC_CHUNK_LOGO_IMG_NAME  | sample-logo.svg          | PDF変換時表紙に描画するロゴマーク
+ |DOC_CHUNK_TITLE_IMG_NAME | sample-cover.svg         | PDF変換時使用する表紙の元
+ |DOC_CHUNK_TOC_LEVELS     | 3                        | 目次生成のセクションレベル
+|===
+
+[options="header"]
+.attributeと変数の関係
+|===
+^|attribute                ^| 変数
+|doctype                    | DOC_CHUNK_TYPE
+|description                | DOC_CHUNK_DESCRIPTION
+|docname                    | DOC_CHUNK_NAME
+|imagesdir                  | DOC_CHUNK_IMAGE_DIR
+|stylesdir                  | BUILD_DOC_THEME_HTML_DIR
+|stylesheet                 | DOC_CHUNK_HTML_THEME_NAME
+|pdf-fontsdir               | DOC_CHUNK_PDF_FONTS_DIR;GEM_FONTS_DIR
+|pdf-themesdir              | BUILD_DOC_THEME_PDF_DIR
+|pdf-theme                  | DOC_CHUNK_PDF_THEME_NAME
+|title-logo-image           | DOC_CHUNK_LOGO_DIR/DOC_CHUNK_LOGO_IMG_NAME
+|title-page-background-image| BUILD_DOC_TEMPLATE_TITLE_PAGE/DOC_CHUNK_TITLE_IMG_NAME
+|revnumber                  | DOC_CHUNK_VERSION
+|vernumber                  | BUILD_DOC_VERSION_REVISION
+|toclevels                  | DOC_CHUNK_TOC_LEVELS
+|===
+
+.文書変換のtarget名称
+|===
+|DOC_CHUNK_TARGET-all   | word,odt,html,pdfへ変換
+|DOC_CHUNK_TARGET-html  | htmlへ変換
+|DOC_CHUNK_TARGET-pdf   | pdfへ変換
+|DOC_CHUNK_TARGET-odt   | odtへ変換
+|DOC_CHUNK_TARGET-word  | wordへ変換
+|DOC_CHUNK_TARGET-check | textlint実行
+|===
+
+=== 各フォーマットのスタイル
+
+==== PDFテーマ
+フォント、フォントサイズ、行間、ページのマージン、ヘッダー、フッター、表紙等を設定する事が可能。theme/pdf/xxx-theme.ymlを参考にして。
+
+日本語フォントの参考::
+https://itcweb.cc.affrc.go.jp/affrit/documents/guide/asciidoc/start#%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E3%81%AE%E5%88%A9%E7%94%A8[Asciidocによる文書作成環境の構築]
+
+PDFテーマ::
+https://docs.asciidoctor.org/pdf-converter/latest/theme/[Asciidoctor PDF Theming]
+
+==== HTMLテーマ
+よくわからん…ポチポチ変更してくれ。
+
+==== word,odtのテーマ
+build-doc/theme/word/reference.docxをwordで開きスタイルを当てる。odtも同様にlibreofficeでtheme/odt/reference.odtファイルにスタイルを当てる。
+
+[appendix]
+== textlint
+参考::
+	https://qiita.com/takasp/items/22f7f72b691fda30aea2[textlint と VS Code で始める文章校正]
+
+
+textlintを使用する場合は build-docディレクトリ直下で `npm install` するとツール一式入手出来る。但しルールセットはja-technical-writingのみなので必要に応じ `npm install --save-dev xxxx` を行い、適宜 `.teextlintrc.json` を変更する。なるべく利用した方が句読点忘れ等防止になる。
+
+[source,terminal]
+----
+build-doc $ npm install
+build-doc $ cmake --build build -- example-check
+[100%] Linting source documents
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:18: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:38: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:58: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:78: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:98: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:118: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:138: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:158: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:178: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:198: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:218: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:238: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:258: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:278: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:298: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/appendix1.adoc:5:318: "げ" が連続して2回使われています。 [Error/ja-technical-writing/ja-no-successive-word]
+/full-path/some-dir/build-doc/example/sections/main.adoc:193:7177: Line 193 sentence length(462) exceeds the maximum sentence length of 100.
+Over 362 characters. [Error/ja-technical-writing/sentence-length]
+/full-path/some-dir/build-doc/example/sections/main.adoc:196:7661: Line 196 sentence length(416) exceeds the maximum sentence length of 100.
+Over 316 characters. [Error/ja-technical-writing/sentence-length]
+/full-path/some-dir/build-doc/example/sections/main.adoc:199:8092: Line 199 sentence length(429) exceeds the maximum sentence length of 100.
+Over 329 characters. [Error/ja-technical-writing/sentence-length]
+/full-path/some-dir/build-doc/example/sections/main.adoc:214:9637: Line 214 sentence length(830) exceeds the maximum sentence length of 100.
+Over 730 characters. [Error/ja-technical-writing/sentence-length]
+
+20 problems
+gmake[3]: *** [example/CMakeFiles/example-check.dir/build.make:71: example/CMakeFiles/example-check] エラー 1
+gmake[2]: *** [CMakeFiles/Makefile2:290: example/CMakeFiles/example-check.dir/all] エラー 2
+gmake[1]: *** [CMakeFiles/Makefile2:297: example/CMakeFiles/example-check.dir/rule] エラー 2
+gmake: *** [Makefile:215: example-check] エラー 2
+----
