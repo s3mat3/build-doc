@@ -1,5 +1,5 @@
 #
-# javascript 
+# javascript
 #
 .DS_Store
 node_modules
@@ -86,6 +86,12 @@ compile_commands.json
 *state.svg
 *activity.svg
 *node.svg
+##
+# diag temp images
+diag-*diag*.svg
+diag-*diag*.png
+diag-plantuml*.svg
+diag-plantuml*.png
 # ca, keys
 *.csr
 *.crt

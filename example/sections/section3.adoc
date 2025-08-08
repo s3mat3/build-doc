@@ -1,3 +1,295 @@
 == Chapter 3
 hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。hogeなパラグラフはfugaである。
 
+=== ネットワーク図
+参考::
+	http://blockdiag.com/en/nwdiag/[blockdiag 1.0 documentation]
+
+[nwdiag, format=svg]
+.Some Network
+----
+nwdiag {
+  network dmz {
+      address = "210.x.x.x/24"
+
+      web01 [address = "210.x.x.1"];
+      web02 [address = "210.x.x.2"];
+  }
+  network internal {
+      address = "172.x.x.x/24";
+
+      web01 [address = "172.x.x.1"];
+      web02 [address = "172.x.x.2"];
+      db01;
+      db02;
+  }
+}
+----
+
+
+[rackdiag, format=svg]
+.Some rack
+----
+rackdiag {
+  // define height of rack
+  8U;
+
+  // define rack items
+  1: UPS [2U];
+  3: DB Server
+  4: Web Server
+  5: Web Server
+  6: Web Server
+  7: Load Balancer
+  8: L3 Switch
+}
+----
+
+[packetdiag, format=svg]
+.とあるパケット
+----
+packetdiag {
+    colwidth = 16
+		0: Start
+		1-15: data size
+		16-31: seg1
+		32-47: seg2
+		48-58: post
+		59-62: sum
+		63: stop
+}
+----
+
+=== UML図
+参考::
+	https://plantuml.com/ja/[plantuml]
+
+[plantuml, format=svg]
+.some sequence
+----
+@startuml
+
+hide footbox
+title Foot Box removed
+
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+@enduml
+----
+
+[plantuml, format=svg]
+.some usecase
+----
+@startuml
+left to right direction
+actor "Food Critic" as fc
+rectangle Restaurant {
+  usecase "Eat Food" as UC1
+  usecase "Pay for Food" as UC2
+  usecase "Drink" as UC3
+}
+fc --> UC1
+fc --> UC2
+fc --> UC3
+@enduml
+----
+
+[plantuml, format=svg]
+.some classes
+----
+@startuml
+class Car
+
+Driver - Car : drives >
+Car *- Wheel : have 4 >
+Car -- Person : < owns
+
+@enduml
+----
+
+[plantuml, format=svg]
+.some relation
+----
+@startuml
+
+abstract class AbstractList
+abstract AbstractCollection
+interface List
+interface Collection
+
+List <|-- AbstractList
+Collection <|-- AbstractCollection
+
+Collection <|- List
+AbstractCollection <|- AbstractList
+AbstractList <|-- ArrayList
+
+class ArrayList {
+  Object[] elementData
+  size()
+}
+@enduml
+----
+
+[plantuml, format=svg]
+.some objects
+----
+@startuml
+object firstObject
+object "My Second Object" as o2
+object user {
+  name = "Dummy"
+  id = 123
+}
+@enduml
+----
+
+[plantuml, format=svg]
+.some activity
+----
+@startuml
+|#pink|Actor_For_red|
+start
+if (color?) is (red) then
+#pink:**action red**;
+:foo1;
+else (not red)
+|#lightgray|Actor_For_no_red|
+#lightgray:**action not red**;
+:foo2;
+endif
+|Next_Actor|
+#lightblue:foo3;
+:foo4;
+|Final_Actor|
+#palegreen:foo5;
+stop
+@enduml
+----
+
+[plantuml, format=svg]
+.some components
+----
+@startuml
+package "Some Group" {
+  HTTP - [First Component]
+  [Another Component]
+}
+
+node "Other Groups" {
+  FTP - [Second Component]
+  [First Component] --> FTP
+}
+
+cloud {
+  [Example 1]
+}
+
+database "MySql" {
+  folder "This is my folder" {
+    [Folder 3]
+  }
+  frame "Foo" {
+    [Frame 4]
+  }
+}
+
+[Another Component] --> [Example 1]
+[Example 1] --> [Folder 3]
+[Folder 3] --> [Frame 4]
+
+@enduml
+----
+
+[plantuml, format=svg]
+.some deployment
+----
+@startuml
+actor アクター
+actor/ "アクター/"
+agent エージェント
+artifact アーティファクト
+boundary 境界
+card カード
+circle 円
+cloud クラウド
+collections コレクション
+component コンポーネント
+control コントロール
+database データベース
+entity エンティティ
+file ファイル
+folder フォルダ
+frame フレーム
+hexagon 六角形
+interface インターフェイス
+label ラベル
+node ノード
+package パッケージ
+person 人型
+queue キュー
+rectangle 四角形
+stack スタック
+storage ストレージ
+usecase ユースケース
+usecase/ "ユースケース/"
+@enduml
+----
+
+[plantuml, format=svg]
+.some state
+----
+@startuml
+scale 350 width
+[*] --> NotShooting
+
+state NotShooting {
+  [*] --> Idle
+  Idle --> Configuring : EvConfig
+  Configuring --> Idle : EvConfig
+}
+
+state Configuring {
+  [*] --> NewValueSelection
+  NewValueSelection --> NewValuePreview : EvNewValue
+  NewValuePreview --> NewValueSelection : EvNewValueRejected
+  NewValuePreview --> NewValueSelection : EvNewValueSaved
+
+  state NewValuePreview {
+     State1 -> State2
+  }
+
+}
+@enduml
+----
+
+[plantuml, format=svg]
+.some timing
+----
+@startuml
+robust "DNS Resolver" as DNS
+robust "ウェブブラウザ" as WB
+concise "ユーザ" as WU
+
+@0
+WU is アイドル
+WB is アイドル
+DNS is アイドル
+
+@+100
+WU -> WB : URL
+WU is 待機
+WB is 処理中
+
+@+200
+WB is 待機
+WB -> DNS@+50 : URL から IPアドレス を解決
+
+@+100
+DNS is 処理中
+
+@+300
+DNS is アイドル
+@enduml
+----
